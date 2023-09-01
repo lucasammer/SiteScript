@@ -1,0 +1,6 @@
+create text header "Hello, world!".
+create image "image.jpg" with caption "wow".
+create link with source "https://example.com" with button with text "click here"
+create text paragraph "some text"
+style background color black
+style color white 
