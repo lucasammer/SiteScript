@@ -90,12 +90,14 @@ namespace SiteScript
 
         public static void Main(string[] args){
             Arg[] arguements = collectArgs(args);
-            if(arguements.Where(a => a.name.ToLower() == "-loglevel").ToArray().Length > 0){
-                CurrentLogLevel = (LogLevel)Enum.Parse(typeof(LogLevel), arguements.Where(a => a.name.ToLower() == "-loglevel").ToArray()[0].value);
-                log($"Set log level to {arguements.Where(a => a.name.ToLower() == "-loglevel").ToArray()[0].value}", LogLevel.debug);
+            Arg[] argsLL = arguements.Where(a => a.name.ToLower() == "-loglevel").ToArray();
+            if(argsLL.Length > 0){
+                CurrentLogLevel = (LogLevel)Enum.Parse(typeof(LogLevel), argsLL[0].value);
+                log($"Set log level to {argsLL[0].value}", LogLevel.debug);
             }
-            if(arguements.Where(a => a.name.ToLower() == "-mode").ToArray().Length > 0){
-                if(arguements.Where(a => a.name.ToLower() == "-mode").ToArray()[0].value.ToLower() == "cli"){
+            argsLL = arguements.Where(a => a.name.ToLower() == "-mode").ToArray();
+            if(argsLL.Length > 0){
+                if(argsLL[0].value.ToLower() == "cli"){
                     CLI.Open();
                     Environment.Exit(0);
                 }

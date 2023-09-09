@@ -17,7 +17,7 @@ namespace SiteScript
             while (true)
             {
                 string input = Console.ReadLine();
-                CLIcommand command = new CLIcommand(input);
+                CLIcommand command = new(input);
                 Program.log($"Recieved command {command.command}", LogLevel.trace);
             }
         }
