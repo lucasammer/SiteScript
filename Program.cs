@@ -1,4 +1,6 @@
-﻿namespace SiteScript
+﻿using System.Linq;
+
+namespace SiteScript
 {
     public enum LogLevel{
         off = 0,
@@ -37,12 +39,55 @@
         }
 
         public static void log(string msg, LogLevel level){
-
+            Console.BackgroundColor = ConsoleColor.Black;
+            if(CurrentLogLevel < level){
+                return;
+            }
+            switch (level)
+            {
+                case LogLevel.all:
+                    Console.WriteLine($"{msg}");
+                    break;
+                case LogLevel.trace:
+                    Console.WriteLine($"TRACE | {msg}");
+                    break;
+                case LogLevel.debug:
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.WriteLine($"DEBUG | {msg}");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    break;
+                case LogLevel.info:
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine($"INFO | {msg}");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    break;
+                case LogLevel.fatal:
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"FATAL | {msg}");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    break;
+                case LogLevel.error:
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"ERROR | {msg}");
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    break;
+                case LogLevel.warn:
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.WriteLine($"WARN | {msg}");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    break;
+                default:
+                    Console.WriteLine($"UNKNOWN | {msg}");
+                    break;
+            }
         }
 
         public static void Main(string[] args){
             Arg[] arguements = collectArgs(args);
-            log(arguements[0].value, LogLevel.debug);
+            if(arguements.Where(a => a.name == "-logLevel").ToArray().Length > 0){
+                CurrentLogLevel = (LogLevel)Enum.Parse(typeof(LogLevel), arguements.Where(a => a.name.ToLower() == "-loglevel").ToArray()[0].value);
+                log($"Set log level to {arguements.Where(a => a.name == "-logLevel").ToArray()[0].value}", LogLevel.debug);
+            }
         }
     }
 }
