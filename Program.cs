@@ -31,6 +31,10 @@ namespace SiteScript
             for (int i = 0; i < args.Length; i++)
             {
                 if(args[i].StartsWith("-")){
+                    if(i == args.Length - 1){
+                        log($"Invalid parameter for aguement {args[i]}", LogLevel.fatal);
+                        Environment.Exit(1);
+                    }
                     Arg detected = new Arg(args[i], args[i+1]);
                     found.Add(detected);
                 }
@@ -49,7 +53,9 @@ namespace SiteScript
                     Console.WriteLine($"{msg}");
                     break;
                 case LogLevel.trace:
+                    Console.ForegroundColor = ConsoleColor.Gray;
                     Console.WriteLine($"TRACE | {msg}");
+                    Console.ForegroundColor = ConsoleColor.White;
                     break;
                 case LogLevel.debug:
                     Console.ForegroundColor = ConsoleColor.Magenta;
@@ -84,9 +90,15 @@ namespace SiteScript
 
         public static void Main(string[] args){
             Arg[] arguements = collectArgs(args);
-            if(arguements.Where(a => a.name == "-logLevel").ToArray().Length > 0){
+            if(arguements.Where(a => a.name.ToLower() == "-loglevel").ToArray().Length > 0){
                 CurrentLogLevel = (LogLevel)Enum.Parse(typeof(LogLevel), arguements.Where(a => a.name.ToLower() == "-loglevel").ToArray()[0].value);
-                log($"Set log level to {arguements.Where(a => a.name == "-logLevel").ToArray()[0].value}", LogLevel.debug);
+                log($"Set log level to {arguements.Where(a => a.name.ToLower() == "-loglevel").ToArray()[0].value}", LogLevel.debug);
+            }
+            if(arguements.Where(a => a.name.ToLower() == "-mode").ToArray().Length > 0){
+                if(arguements.Where(a => a.name.ToLower() == "-mode").ToArray()[0].value.ToLower() == "cli"){
+                    CLI.Open();
+                    Environment.Exit(0);
+                }
             }
         }
     }
